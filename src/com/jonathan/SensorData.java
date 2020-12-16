@@ -38,10 +38,19 @@ public class SensorData {
 
     public void addSample(TempSample sample)
     {
+        if (this.numOfSamples!=0)
+        {
         minTemp = min(sample.getTemp(), this.minTemp);
         maxTemp = max(sample.getTemp(), this.maxTemp);
         avgTemp = ((avgTemp*numOfSamples)+sample.getTemp())/(numOfSamples+1);
+        }
+        else {
+            minTemp=sample.getTemp();
+            maxTemp=sample.getTemp();
+            avgTemp=sample.getTemp();
+        }
         numOfSamples++;
+
+        }
     }
 
-}

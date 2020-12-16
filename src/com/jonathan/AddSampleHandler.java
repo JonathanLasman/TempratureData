@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.channels.FileLock;
 
@@ -21,27 +22,28 @@ public class AddSampleHandler implements HttpHandler {
     }
 
     void addSample(TempSample sample) throws IOException {
-        //Get sensor file
-        File sensorFile = new File(sample.getId() + ".json");
+        String localPath = System.getProperty("user.dir")+"/Measurement/";
 
-        //Lock file
-        FileInputStream fis = new FileInputStream(sensorFile);
-        FileLock lock = fis.getChannel().lock();
+        //Get sensor file
+        File sensorFile = new File( localPath+sample.getId()+".json");
+
+
+
 
         SensorData sensorData;
         if (!sensorFile.exists()) {
             sensorFile.createNewFile();
             sensorData = new SensorData();
+
         } else {
             sensorData = SensorFile.fileToData(sensorFile);
+
         }
 
         //add samples
         sensorData.addSample(sample);
         GlobalData.addSample(sample);
         SensorFile.save(sensorFile, sensorData);
-
-        //Unlock file
-        lock.release();
+        }
     }
-}
+
